@@ -15,11 +15,11 @@ public class GuildMusicManager {
         forwarder = new AudioForwarder(player);
     }
 
-    public TrackScheduler getScheduler() {
+    public TrackScheduler getTrackScheduler() {
         return scheduler;
     }
 
-    public AudioForwarder getForwarder() {
+    public AudioForwarder getAudioForwarder() {
         return forwarder;
     }
 }

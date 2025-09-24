@@ -1,15 +1,20 @@
 package org.example.commands;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.managers.AudioManager;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.example.ICommand;
+import org.example.lavaplayer.PlayerManager;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class play implements ICommand {
 
@@ -25,7 +30,10 @@ public class play implements ICommand {
 
     @Override
     public CommandData getData() {
-        return Commands.slash(getName(),getDescription());
+        List<OptionData> options = new ArrayList<>();
+        options.add(new OptionData(OptionType.STRING, "name", "name of song to play", true));
+
+        return Commands.slash(getName(),getDescription()).addOptions(options);
     }
 
     @Override
@@ -36,16 +44,28 @@ public class play implements ICommand {
             return;
         }
 
-        VoiceChannel channel = guild.getVoiceChannelsByName("music",true).get(0);
-        AudioManager audioManager = guild.getAudioManager();
-        if (channel==null) {
-            event.reply("Error: No music channel found").setEphemeral(true).queue();
+        Member member = event.getMember();
+        GuildVoiceState memberVoiceState = member.getVoiceState();
+
+        if (!memberVoiceState.inAudioChannel()) {
+            event.reply("Not in a voice channel").setEphemeral(true).queue();
             return;
         }
 
-        AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(playerManager);
+        Member self  = event.getGuild().getSelfMember();
+        GuildVoiceState selfVoiceState = self.getVoiceState();
 
-        // set audio send handler and open connection
+        if (!selfVoiceState.inAudioChannel()) {
+            event.getGuild().getAudioManager().openAudioConnection(memberVoiceState.getChannel());
+        } else {
+            if (selfVoiceState.getChannel() != memberVoiceState.getChannel()) {
+                event.reply("Already in a voice channel").setEphemeral(true).queue();
+                return;
+            }
+        }
+
+        PlayerManager playerManager = PlayerManager.getInstance();
+        event.reply("Playing song").queue();
+        playerManager.play(event.getGuild(), event.getOption("name").getAsString());
     }
 }
