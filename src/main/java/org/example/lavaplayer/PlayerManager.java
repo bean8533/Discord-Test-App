@@ -10,13 +10,12 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PlayerManager {
 
     private static PlayerManager instance;
-    private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<Long, GuildMusicManager>();
+    private Map<Long, GuildMusicManager> guildMusicManagers = new HashMap<>();
     private AudioPlayerManager audioPlayerManager = new DefaultAudioPlayerManager();
 
     private PlayerManager() {

@@ -7,26 +7,24 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 
-public class appManager {
+public class AppManager {
     private static final Dotenv config = Dotenv.configure().load();
 
-    public appManager() throws LoginException {
+    public AppManager() throws LoginException {
         String token = config.get("DISCORD_TOKEN");
         JDABuilder builder = JDABuilder.createDefault(token);
 
         builder.enableIntents(GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES);
 
         // Event listeners
-        builder.addEventListeners(new commandManager());
+        builder.addEventListeners(new CommandManager());
 
         // Caching
-        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
-        builder.setChunkingFilter(ChunkingFilter.ALL);
-        builder.enableCache(CacheFlag.ONLINE_STATUS);
+        builder.setMemberCachePolicy(MemberCachePolicy.NONE);
+        builder.setChunkingFilter(ChunkingFilter.NONE);
 
         // Bot status
         builder.setStatus(OnlineStatus.ONLINE);

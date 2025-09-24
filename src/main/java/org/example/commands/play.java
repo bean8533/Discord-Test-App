@@ -11,8 +11,6 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.example.ICommand;
 import org.example.lavaplayer.PlayerManager;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 

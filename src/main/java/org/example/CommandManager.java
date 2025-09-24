@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class commandManager extends ListenerAdapter {
+public class CommandManager extends ListenerAdapter {
 
     private final Map<String, ICommand> commands = new ConcurrentHashMap<>();
 
     // add commands here
-    public commandManager() {
+    public CommandManager() {
         addCommand(new coinflip());
         addCommand(new emote());
         addCommand(new giverole());
