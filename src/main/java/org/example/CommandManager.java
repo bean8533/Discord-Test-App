@@ -26,7 +26,6 @@ public class CommandManager extends ListenerAdapter {
         addCommand(new coinflip());
         addCommand(new emote());
         addCommand(new giverole());
-        // addCommand(new play());
         addCommand(new ProfilePicture());
         addCommand(new roles());
         addCommand(new say());
